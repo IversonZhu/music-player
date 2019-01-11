@@ -23,7 +23,9 @@ export default {
         }
     },
     mounted() {
-        this._initScroll()
+        setTimeout(() => {
+            this._initScroll()
+        }, 20)
     },
     watch: {
         data() {
@@ -34,7 +36,7 @@ export default {
     },
     methods: {
         _initScroll() {
-            if (this.$refs.wrapper) {
+            if (!this.$refs.wrapper) {
                 return
             }
             this.scroll = new BScroll(this.$refs.wrapper, {

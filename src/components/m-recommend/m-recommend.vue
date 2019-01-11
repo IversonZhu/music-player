@@ -6,7 +6,7 @@
           <slider>
             <div v-for="item in recommends" :key="item.id">
               <a :href="item.linkUrl">
-                <img class="needsclick" :src="item.picUrl">
+                <img class="needsclick" @load="loadImage" :src="item.picUrl">
               </a>
             </div>
           </slider>
@@ -16,7 +16,7 @@
           <ul>
             <li @click="selectItem(item)" v-for="item in discList" :key=item.dissid class="item">
               <div class="icon">
-                <img width="60" height="60" :src="item.imgurl">
+                <img width="60" height="60" v-lazy="item.imgurl">
               </div>
               <div class="text">
                 <h2 class="name" v-html="item.creator.name"></h2>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="loading-container" v-show="!discList.length">
-        <!-- <loading></loading> -->
+        <loading></loading>
       </div>
     </scroll>
     <router-view></router-view>
@@ -35,6 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import Loading from 'base/loading/loading'
 import Slider from 'base/slider/slider'
 import Scroll from 'base/scroll/scroll'
 import {getRecommend, getDiscList} from 'api/recommend'
@@ -47,8 +48,10 @@ export default {
       }
     },
     created() {
-        this._getRecmmend()
+      this._getRecmmend()
+      setTimeout(() => {
         this._getDiscList()
+      }, 1000)
     },
     methods: {
         _getRecmmend() {
@@ -62,14 +65,20 @@ export default {
           getDiscList().then((res) => {
             if(res.code === ERR_OK){
               this.discList = res.data.list
-              console.log(res.data.list)
             }
           })
+        },
+        loadImage() {
+          if(!this.checkLoaded) {
+            this.checkLoaded = true
+            this.$refs.scroll.refresh()
+          }
         }
     },
     components: {
         Slider,
-        Scroll
+        Scroll,
+        Loading
     }
 }
 </script>
