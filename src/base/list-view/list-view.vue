@@ -10,7 +10,7 @@
           <li class="list-group" v-for="group in data" :key=group.title ref="listGroup">
               <h2 class="list-group-title">{{group.title}}</h2>
               <ul>
-                  <li class="list-group-item" v-for="item in group.items" :key=item.id>
+                  <li @click="selectItem(item)" class="list-group-item" v-for="item in group.items" :key=item.id>
                       <img class="avatar" v-lazy="item.avatar"/>
                       <span class="name">{{item.name}}</span>
                   </li>
@@ -96,6 +96,10 @@ export default {
         },
         scroll(pos) {
             this.scrollY = pos.y
+        },
+        //派发事件
+        selectItem(item) {
+            this.$emit('select', item)
         },
         _scrollTo(index) {
             if(!index && index !==0) {
