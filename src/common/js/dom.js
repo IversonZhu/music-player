@@ -42,7 +42,7 @@ let vendor = (() => {
 })()
 
 export function prefixStyle(style) {
-  if (vendor === false) {
+  if (vendor === false) { 
     return false
   }
 
