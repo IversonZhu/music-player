@@ -1,52 +1,43 @@
 <template>
     <transition name="slide">
-        <music-list :songs="songs" :title="title" :bg-image="bgImage"></music-list>
+       <music-list :bg-image="bgImgae" :title="title" :songs="songs" :rank="rank"></music-list> 
     </transition>
 </template>
 
 <script type="text/ecmascript-6">
-    import {mapGetters} from 'vuex'
-    import {ERR_OK} from 'api/config'
-    import {getSingerDetail, getMusic} from 'api/singer'
-    import {createSong} from 'common/js/song'
     import MusicList from 'components/m-music-list/m-music-list'
+    import {mapGetters} from 'vuex'
+    import {getMusicList} from 'api/rank'
+    import {ERR_OK} from 'api/config'
+    import {createSong} from 'common/js/song'
+    import {getMusic} from 'api/singer'
 
     export default {
-        created() {
-            this._getsingerDetail()
-        },
         data() {
             return {
-                songs: []
+                songs: [],
+                rank: true
             }
         },
-        computed: {
-            title() {
-                return this.singer.name
-            },
-            bgImage() {
-                return this.singer.avatar
-            },
-            ...mapGetters([
-                'singer'
-            ]) 
+        created() {
+            this._getMusicList()
         },
         methods: {
-            _getsingerDetail(){
-                if(!this.singer.id) {
-                    this.$router.push('/m-singer')
+            _getMusicList() {
+                if(!this.topList.id) {
+                    this.$router.push('/m-rank')
+                    return
                 }
-                getSingerDetail(this.singer.id).then((res) => {
+                getMusicList(this.topList.id).then((res) => {
                     if(res.code === ERR_OK) {
-                        this.songs = this._normalizeSongs(res.data.list)
-                        console.log(this.songs)
+                        this.songs = this._normalizeSongs(res.songlist)
                     }
                 })
             },
             _normalizeSongs(list) {
                 let ret = []
                 list.forEach((item) => {
-                    let {musicData} = item
+                    const musicData = item.data
                     if (musicData.songmid && musicData.albummid) {
                         getMusic(musicData.songmid).then((res) => {
                             if (res.code === ERR_OK) {
@@ -60,6 +51,20 @@
                 return ret
             }
         },
+        computed: {
+            title() {
+                return this.topList.topTitle
+            },
+            bgImgae() {
+                if(this.songs.length) {
+                    return this.songs[0].image
+                }
+                return ''
+            },
+            ...mapGetters([
+                'topList'
+            ])
+        },
         components: {
             MusicList
         }
@@ -67,12 +72,9 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-    @import '~common/stylus/variable'
+  .slide-enter-active, .slide-leave-active
+    transition: all 0.3s ease
 
-    .slide-enter-active, .slide-leave-active
-        transition: all 0.3s
-
-    .slide-enter, .slide-leave-to
-        transform: translate3d(100%, 0, 0)
+  .slide-enter, .slide-leave-to
+    transform: translate3d(100%, 0, 0)
 </style>
-

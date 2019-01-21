@@ -5,17 +5,17 @@ import {shuffle} from 'common/js/util'
 export const playlistMixin = {
   computed: {
     ...mapGetters([
-      'playlist'
+      'playList'
     ])
   },
   mounted() {
-    this.handlePlaylist(this.playlist)
+    this.handlePlaylist(this.playList)
   },
   activated() {
-    this.handlePlaylist(this.playlist)
+    this.handlePlaylist(this.playList)
   },
   watch: {
-    playlist(newVal) {
+    playList(newVal) {
       this.handlePlaylist(newVal)
     }
   },
@@ -33,7 +33,7 @@ export const playerMixin = {
     },
     ...mapGetters([
       'sequenceList',
-      'playlist',
+      'playList',
       'currentSong',
       'mode',
       'favoriteList'
@@ -50,7 +50,7 @@ export const playerMixin = {
         list = this.sequenceList
       }
       this.resetCurrentIndex(list)
-      this.setPlaylist(list)
+      this.setPlayList(list)
     },
     resetCurrentIndex(list) {
       let index = list.findIndex((item) => {
@@ -79,7 +79,7 @@ export const playerMixin = {
     },
     ...mapMutations({
       setPlayMode: 'SET_PLAY_MODE',
-      setPlaylist: 'SET_PLAYLIST',
+      setPlayList: 'SET_PLAYLIST',
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayingState: 'SET_PLAYING_STATE'
     }),

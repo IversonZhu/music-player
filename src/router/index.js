@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Rank from 'components/m-rank/m-rank'
-import Search from 'components/m-search/m-search'
+import Rank from 'components/rank/rank'
+import Search from 'components/search/search'
 import Recommend from 'components/m-recommend/m-recommend'
 import Singer from 'components/m-singer/m-singer'
 import SingerDetail from 'components/m-singer-detail/m-singer-detail'
+import Disc from 'components/disc/disc'
+import TopList from 'components/top-list/top-list'
 
 
 Vue.use(Router)
@@ -17,7 +19,13 @@ export default new Router({
     },
     {
       path: '/m-recommend',
-      component: Recommend
+      component: Recommend,
+      children: [
+        {
+          path: ':id',
+          component: Disc
+        }
+      ]
     },
     {
       path: '/m-singer',
@@ -31,11 +39,17 @@ export default new Router({
     },
     {
       path: '/m-rank',
-      component: Rank
+      component: Rank,
+      children: [
+        {
+          path: ':id',
+          component: TopList
+        }
+      ]
     },
     {
       path: '/m-search',
-      component: Search
+      component: Search,
     },
   ]
 })
