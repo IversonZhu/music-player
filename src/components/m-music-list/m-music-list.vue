@@ -53,7 +53,6 @@
         created () {
             this.probeType = 3
             this.listenScroll = true
-            
         },
         props: {
             bgImage: {
